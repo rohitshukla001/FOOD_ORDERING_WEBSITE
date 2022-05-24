@@ -1,0 +1,107 @@
+{% extends "main/layout.html" %} {% block content %}
+<div class="cart">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-9 pl-8 mt-5">
+        <h3 class="text-center">Your Cart</h3>
+        {% if cart_items %}
+        <div class="table-responsive">
+          <table class="border table table-light">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Price</th>
+                <th scope="col">pdf</th>
+
+                <th scope="col">Pieces</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for cart in cart_items %}
+              <tr>
+                <td>
+                  {{ cart.item.title }}
+                  <span class="badge badge-{{ cart.item.label_colour }}"
+                    >{{ cart.item.labels }}</span
+                  >
+                </td>
+                <td>{{ cart.item.description }}</td>
+                <td>{{ cart.item.price }}</td>
+                <td>{{ cart.item.pieces }}</td>
+                <td>
+                  <a class="btn btn-danger" href="..\main\sample.pdf">Pdf</a>
+                </td>
+                <td>
+                  <a
+                    class="btn btn-danger"
+                    href="{% url 'main:remove-from-cart' cart.id %}"
+                    >Delete😢</a
+                  >
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <h4 class="text-center border bg-warning text-dark">
+          Sorry, your cart is empty..Please add items!!!
+        </h4>
+        {% endif %}
+      </div>
+      <div class="col-sm-3 mt-5 mb-3">
+        <div class="content-section">
+          <h3 class="text-center">Order Summary</h3>
+          <ul class="list-group">
+            <li
+              id="firstNumber"
+              class="list-group-item list-group-item-light text-center text-dark"
+            >
+              <b>Total: </b>{{ total }} 🤑
+            </li>
+            <li
+              class="list-group-item list-group-item-light text-center text-dark"
+            >
+              <b>Number of Boxes: </b>{{ count }}
+            </li>
+            <li
+              class="list-group-item list-group-item-light text-center text-dark"
+            >
+              <b>Total Pieces:</b> {{ total_pieces }}
+            </li>
+            <li class="list-group-item list-group-item-light text-center">
+              <a class="btn btn-primary text-white" href="/"
+                >Continue Buying 🙂</a
+              >
+            </li>
+            <form
+              class="text-center border btn text-white"
+              action="success"
+              method="POST"
+            >
+              {% csrf_token %}
+              <script
+                src="https://checkout.razorpay.com/v1/checkout.js"
+                data-key="rzp_live_35X6zFXeQlOyA9"
+                data-amount="100"
+                data-currency="INR"
+                data-order_id="{{payment.id}}"
+                data-buttontext="Pay Now 💰"
+                data-name="Rohit shukla"
+                data-description="Software Developer"
+                data-image="../media/Rohit-shukla.png"
+                data-prefill.name="Rohit shukla"
+                data-prefill.email="rawstar1090@gmail.com"
+                data-theme.color="#F37254"
+              ></script>
+            </form>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

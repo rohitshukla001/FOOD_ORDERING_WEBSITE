@@ -1,0 +1,106 @@
+{% load get_group %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'main/styles.css' %}">
+    <link rel="icon" type="image/x-icon" href="../media/favicon.png">
+    <title>Food Corner</title>
+    <style>
+        nav {background-color: #0F172A;}
+        footer {background-color: #1E293B;}
+        #nft {background-color: #1E293B;}       
+        li a:hover {
+            text-decoration: none;
+             border-top: 4px solid white;
+             border-bottom: 4px solid white;
+            padding: 6px 0; 
+        }
+    </style>        
+</head>
+<body>
+    <nav class="navbar pt-2 bggg navbar-expand-lg navbar-light ">
+        <span class="mx-5 "><img src="https://rohitshukla.me/assets/logosite.png" width="250px" alt="fast-food-logo"></span>
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+            </ul>
+            <ul class="mx-2 nav navbar-nav ">                   
+                    <li class="mx-2 fa fa-home"><a href="{% url 'main:home' %}" class="mr-2 text-light">Home</a></li>
+                    <li class="mx-2 "><a href="/developer" class="mr-2 text-light">Developers</a></li>
+
+                    {% if user.is_authenticated %}
+                    {% if request.user|has_group:"admin_owner" %} 
+                        <li class="mx-2"><a href="{% url 'main:admin_dashboard' %}" class="mr-2 text-light">DashBoard</a></li>
+                        <li>
+                            <form class="logout-link bg-danger" action="{% url 'accounts:logout' %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="mr-2">Logout</button>
+                            </form>
+                        </li> 
+                    {% else %}
+                        <li class="mx-2"><a href="{% url 'main:cart' %}" class="mr-2 text-light">My Cart🛒</a></li>
+                        <li class="mx-2"><a href="{% url 'main:order_details' %}" class="mr-2 text-light">Your Orders</a></li>
+                        <li>
+                            <form class="logout-link bg-danger" action="{% url 'accounts:logout' %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="mx-2 mr-2 text-white bg-danger">Logout</button>
+                            </form>
+                        </li>
+                    {% endif %}
+                {% else %}
+                <li>
+                    <form class="login-link " action="{% url 'accounts:login' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="mx-2 mr-2 btn text-white bg-primary">Login</button>
+                    </form>
+                </li>
+                <li>
+                    <form class="logout-link" action="{% url 'accounts:signup' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="mx-2 mr-2 btn text-white btn-primary">Signup</button>
+                    </form>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    <main role="main">
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script>
+        $('.carousel').carousel();    
+
+    </script>
+          <div class="text-light bg-dark ">
+            <footer class="py-3 my-4">
+              <div class="text-center text-white ">
+              <p >© 2021-22 <a class="text-muted" href="/">RohitShukla.me</a> </p></div>
+            </footer>
+          </div>
+    </body>
+</html>
